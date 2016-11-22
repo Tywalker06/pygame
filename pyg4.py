@@ -3,6 +3,12 @@ import random
 import sys
 pygame.init();
 
+white = (255, 255, 255)
+black = (0, 0, 0)
+red = (0, 255, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
+
 gameDisplay = pygame.display.set_mode((800,600))
 
 
@@ -16,15 +22,13 @@ while not gameExit:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			gameExit = True
-			
+
+	gameDisplay.fill(green)
+	pygame.display.update()
+
 pygame.quit()
 quit()
 
-white = (255, 255, 255)
-black = (0, 0, 0)
-red = (0, 255, 0)
-green = (0, 255, 0)
-blue = (0, 0, 255)
 
 
 # class Box(pygame.sprite.Sprite)
