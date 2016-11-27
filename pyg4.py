@@ -11,6 +11,9 @@ blue = (0, 0, 255)
 
 gameDisplay = pygame.display.set_mode((800,600))
 
+move_x = 300
+move_y = 300
+move_x_change = 0
 
 pygame.display.set_caption('Name of my game')
 
@@ -22,8 +25,17 @@ while not gameExit:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			gameExit = True
+		if event.type == pygame.KEYDOWN:
+			if event.key == pygame.K_LEFT:
+				move_x_change = -10
+			if event.key == pygame.K_RIGHT:
+				move_x = 10
+
+	move_x += move_x_change
+
 
 	gameDisplay.fill(green)
+	pygame.draw.rect(gameDisplay, red, [move_x, move_y, 10, 10,])
 	pygame.display.update()
 
 pygame.quit()
