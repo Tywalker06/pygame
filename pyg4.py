@@ -1,23 +1,40 @@
 import pygame
 import random
 import sys
+import time
 pygame.init();
 
 white = (255, 255, 255)
 black = (0, 0, 0)
-red = (0, 255, 0)
+red = (250, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
 
-gameDisplay = pygame.display.set_mode((800,600))
+display_width = 800
+display_height = 800
 
-move_x = 300
-move_y = 300
+gameDisplay = pygame.display.set_mode((display_width,display_height))
+
+move_x = display_width/2
+move_y = display_height/2
+
 move_x_change = 0
+move_y_change = 0
+
+font = pygame.font.SysFont(None, 30)
+
+def Message_to_user(msg, color):
+	screen_message = font.render(msg, True, color)
+	gameDisplay.blit(screen_message, [display_width/2, display_height/2])
+
+fps = 30
+clock = pygame.time.Clock()
+
+blocksize = 10
 
 pygame.display.set_caption('Name of my game')
 
-pygame.display.update()
+# pygame.display.update()
 
 gameExit = False
 
@@ -27,17 +44,38 @@ while not gameExit:
 			gameExit = True
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_LEFT:
-				move_x_change = -10
-			if event.key == pygame.K_RIGHT:
-				move_x = 10
+				move_x_change = - blocksize
+				move_y_change = 0
+			elif event.key == pygame.K_RIGHT:
+				move_x_change = blocksize
+				move_y_change = 0
+			elif event.key == pygame.K_UP:
+				move_y_change = - blocksize
+				move_x_change = 0
+			elif event.key == pygame.K_DOWN:
+				move_y_change = blocksize
+				move_x_change = 0
+	if move_x >= display_width or move_x < 0 or move_y >= display_height or move_y < 0:
+		gameExit = True
+
+		# if event.type == pygame.KEYUP:
+		# 	if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+		# 		move_x_change = 0
+		# 	if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+		# 		move_y_change = 0
 
 	move_x += move_x_change
-
+	move_y += move_y_change
 
 	gameDisplay.fill(green)
-	pygame.draw.rect(gameDisplay, red, [move_x, move_y, 10, 10,])
+	pygame.draw.rect(gameDisplay, black, [move_x, move_y, blocksize, blocksize,])
 	pygame.display.update()
 
+	clock.tick(fps)
+
+Message_to_user("Sorry, Thanks For Playing", red)
+pygame.display.update()
+time.sleep(2)
 pygame.quit()
 quit()
 
