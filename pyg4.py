@@ -15,11 +15,6 @@ display_height = 800
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 
-move_x = display_width/2
-move_y = display_height/2
-
-move_x_change = 0
-move_y_change = 0
 
 font = pygame.font.SysFont(None, 30)
 
@@ -34,52 +29,88 @@ blocksize = 10
 
 pygame.display.set_caption('Name of my game')
 
+class mouse(pygame.sprite.Sprite):
+	def __init__(self, width, height):
+		# super().__init__()
+
+		self.image = pygame.Surface([15, 15])
+		# self.image.fill(white)
+		# self.image.set_colorkey(white)
+
+		self.image = pygame.image.load("mouse.png").convert_alpha()
+		self.rect = self.image.get_rect()
+
 # pygame.display.update()
 
-gameExit = False
-
-while not gameExit:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			gameExit = True
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_LEFT:
-				move_x_change = - blocksize
-				move_y_change = 0
-			elif event.key == pygame.K_RIGHT:
-				move_x_change = blocksize
-				move_y_change = 0
-			elif event.key == pygame.K_UP:
-				move_y_change = - blocksize
-				move_x_change = 0
-			elif event.key == pygame.K_DOWN:
-				move_y_change = blocksize
-				move_x_change = 0
-	if move_x >= display_width or move_x < 0 or move_y >= display_height or move_y < 0:
-		gameExit = True
-
-		# if event.type == pygame.KEYUP:
-		# 	if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-		# 		move_x_change = 0
-		# 	if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-		# 		move_y_change = 0
-
-	move_x += move_x_change
-	move_y += move_y_change
-
-	gameDisplay.fill(green)
-	pygame.draw.rect(gameDisplay, black, [move_x, move_y, blocksize, blocksize,])
-	pygame.display.update()
-
-	clock.tick(fps)
-
-Message_to_user("Sorry, Thanks For Playing", red)
-pygame.display.update()
-time.sleep(2)
-pygame.quit()
-quit()
 
 
+def gameLoop():
+	move_x = display_width/2
+	move_y = display_height/2
+
+	move_x_change = 0
+	move_y_change = 0
+
+	gameExit = False
+	gameOver = False
+	while not gameExit:
+
+		while gameOver == True:
+			gameDisplay.fill(black)
+			Message_to_user("Game Over, Press 'p' to play again or 'q' to quit", white)
+			pygame.display.update()
+
+			for event in pygame.event.get():
+				if event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_q:
+						gameExit = True
+						gameOver = False
+					if event.key == pygame.K_p:
+						gameLoop()
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				gameExit = True
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_LEFT:
+					move_x_change = - blocksize
+					move_y_change = 0
+				elif event.key == pygame.K_RIGHT:
+					move_x_change = blocksize
+					move_y_change = 0
+				elif event.key == pygame.K_UP:
+					move_y_change = - blocksize
+					move_x_change = 0
+				elif event.key == pygame.K_DOWN:
+					move_y_change = blocksize
+					move_x_change = 0
+
+
+		if move_x >= display_width or move_x < 0 or move_y >= display_height or move_y < 0:
+			gameOver = True
+
+			# if event.type == pygame.KEYUP:
+			# 	if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+			# 		move_x_change = 0
+			# 	if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+			# 		move_y_change = 0
+
+		move_x += move_x_change
+		move_y += move_y_change
+
+		gameDisplay.fill(green)
+		pygame.draw.rect(gameDisplay, black, [move_x, move_y, blocksize, blocksize,])
+		mouse(50, 50)
+		pygame.display.update()
+
+		clock.tick(fps)
+
+	# Message_to_user("Sorry, Thanks For Playing", red)
+	# pygame.display.update()
+	# time.sleep(2)
+	pygame.quit()
+	quit()
+
+gameLoop()
 
 # class Box(pygame.sprite.Sprite)
 # 	def __init__(self, color, x, y, width, height):
