@@ -33,8 +33,7 @@ blocksize = 10
 
 pygame.display.set_caption('Snake Game')
 
-randMouseX = random.randrange(0, display_width - blocksize)
-randMouseY = random.randrange(0, display_height - blocksize)
+
 
 class Mouse(Sprite):
 	def __init__(self):
@@ -42,6 +41,14 @@ class Mouse(Sprite):
 		self.image = image.load("mouse.png").convert_alpha()
 		self.image = transform.scale(self.image, (50, 50))
 		self.rect = self.image.get_rect()
+	def move(self):
+		randX = randint(0, 700)
+		randY = randint(0, 700)
+		self.rect.center = (randX,randY)
+
+	
+	
+
 
 
 
@@ -51,6 +58,11 @@ sprites = RenderPlain(my_mouse)
 
 sprites.update()
 sprites.draw(gameDisplay)
+
+# def hit(self, target):
+# 	return self.rect.colliderect(target)
+
+
 
 
 
@@ -69,6 +81,7 @@ def gameLoop():
 		while gameOver == True:
 			gameDisplay.fill(black)
 			Message_to_user("Game Over, Press 'p' to play again or 'q' to quit", red)
+			mixer.Sound("lose.wav").play()
 			pygame.display.update()
 
 			for event in pygame.event.get():
@@ -82,6 +95,11 @@ def gameLoop():
 			if event.type == pygame.QUIT:
 				gameExit = True
 			if event.type == pygame.KEYDOWN:
+				# if snake.hit(sprites):
+				# 	mixer.Sound("eat.wav").play()
+				# 	sprites.move()
+				
+
 				if event.key == pygame.K_LEFT:
 					move_x_change = - blocksize
 					move_y_change = 0
@@ -104,7 +122,8 @@ def gameLoop():
 		move_y += move_y_change
 
 		gameDisplay.fill(green)
-		pygame.draw.rect(gameDisplay, black, [move_x, move_y, blocksize, blocksize,])
+		snake = pygame.draw.rect(gameDisplay, black, [move_x, move_y, blocksize, blocksize,])
+		snake
 		sprites.draw(gameDisplay)
 		
 
