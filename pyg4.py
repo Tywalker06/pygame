@@ -33,19 +33,42 @@ blocksize = 10
 
 pygame.display.set_caption('Snake Game')
 
+ranx = random.randrange(0, display_width - blocksize)
+rany = random.randrange(0, display_height - blocksize)
 
+# class Mouse(pygame.sprite.Sprite):
+# 	def __init__(self):
+# 		Sprite.__init__(self)
+# 		self.image = image.load("mouse.png").convert_alpha()
+# 		self.image = transform.scale(self.image, (50, 50))
+# 		self.rect = self.image.get_rect()
 
 class Mouse(Sprite):
-	def __init__(self):
-		Sprite.__init__(self)
-		self.image = image.load("mouse.png").convert_alpha()
-		self.image = transform.scale(self.image, (50, 50))
-		self.rect = self.image.get_rect()
-	def move(self):
-		randX = randint(0, 700)
-		randY = randint(0, 700)
-		self.rect.center = (randX,randY)
+    def __init__(self, x, y):
+        Sprite.__init__(self)
+        self.image = image.load("mouse.png").convert_alpha()
+        self.image = transform.scale(self.image, (50, 50))
+        self.x = ranx
+        self.y = rany
+        self.rect = self.image.get_rect()
 
+    # move gold to a new random location
+    def move(self):
+        randX = randint(0, display_width)
+        randY = randint(0, display_height)
+        self.rect.center = (randX,randY)
+
+	# def move(self):
+	# 	randX = randint(0, 700)
+	# 	randY = randint(0, 700)
+	# 	self.rect.center = (randX,randY)
+
+# class Bomb(pygame.sprite.Sprite):
+# 	def __init__(self):
+# 		Sprite.__init__(self)
+# 		self.image = pygame.draw.rect(gameDisplay, red, 30, 30)
+# 		self.rect = self.image.get_rect()
+# 		self.rect = pygame.rect.Rect(bombx, bomby)
 	
 	
 
@@ -53,9 +76,10 @@ class Mouse(Sprite):
 
 
 # pygame.display.update()
-my_mouse = Mouse()
+my_mouse = Mouse(ranx, rany)
+# # my_bomb = Bomb()
 sprites = RenderPlain(my_mouse)
-
+my_mouse.move()
 sprites.update()
 sprites.draw(gameDisplay)
 
@@ -72,6 +96,9 @@ def gameLoop():
 
 	move_x_change = 0
 	move_y_change = 0
+
+	ranx = random.randrange(0, display_width - blocksize)
+	rany = random.randrange(0, display_height - blocksize)
 
 
 	gameExit = False
@@ -126,10 +153,12 @@ def gameLoop():
 		snake
 		sprites.draw(gameDisplay)
 		
+		if move_x == ranx or move_y == rany:
+			print (" sign of collison")
 
 		pygame.display.update()
 		sprites.update()
-		# sprites.draw(gameDisplay)
+		sprites.draw(gameDisplay)
 		
 		clock.tick(fps)
 		
