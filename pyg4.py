@@ -15,7 +15,10 @@ green = (0, 255, 0)
 blue = (0, 0, 255)
 
 display_width = 800
-display_height = 800
+display_height = 600
+
+move_x = display_width/2
+move_y = display_height/2
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 
@@ -54,9 +57,15 @@ class Mouse(Sprite):
 
     # move gold to a new random location
     def move(self):
-        randX = randint(0, display_width)
-        randY = randint(0, display_height)
+        randX = randint(0, display_width - 15)
+        randY = randint(0, display_height - 100)
         self.rect.center = (randX,randY)
+        print ()
+class Snake(Sprite):
+	def __init__ (self):
+		Sprite.__init__(self)
+		self.image = pygame.Surface( [blocksize, blocksize])
+		self.rect = self.image.get_rect()
 
 	# def move(self):
 	# 	randX = randint(0, 700)
@@ -77,8 +86,9 @@ class Mouse(Sprite):
 
 # pygame.display.update()
 my_mouse = Mouse(ranx, rany)
+my_snake = Snake()
 # # my_bomb = Bomb()
-sprites = RenderPlain(my_mouse)
+sprites = RenderPlain(my_mouse,my_snake)
 my_mouse.move()
 sprites.update()
 sprites.draw(gameDisplay)
@@ -86,7 +96,8 @@ sprites.draw(gameDisplay)
 # def hit(self, target):
 # 	return self.rect.colliderect(target)
 
-
+move_x = display_width/2
+move_y = display_height/2
 
 
 
@@ -108,7 +119,6 @@ def gameLoop():
 		while gameOver == True:
 			gameDisplay.fill(black)
 			Message_to_user("Game Over, Press 'p' to play again or 'q' to quit", red)
-			mixer.Sound("lose.wav").play()
 			pygame.display.update()
 
 			for event in pygame.event.get():
@@ -122,9 +132,6 @@ def gameLoop():
 			if event.type == pygame.QUIT:
 				gameExit = True
 			if event.type == pygame.KEYDOWN:
-				# if snake.hit(sprites):
-				# 	mixer.Sound("eat.wav").play()
-				# 	sprites.move()
 				
 
 				if event.key == pygame.K_LEFT:
@@ -144,17 +151,20 @@ def gameLoop():
 		if move_x >= display_width or move_x < 0 or move_y >= display_height or move_y < 0:
 			gameOver = True
 
+		if pygame.sprite.collide_rect(my_mouse,my_snake):
+			my_mouse.move()
+			mixer.Sound("lose.wav").play()
 
 		move_x += move_x_change
 		move_y += move_y_change
+		my_snake.rect.x = move_x
+		my_snake.rect.y = move_y
 
 		gameDisplay.fill(green)
-		snake = pygame.draw.rect(gameDisplay, black, [move_x, move_y, blocksize, blocksize,])
-		snake
+		
 		sprites.draw(gameDisplay)
 		
-		if move_x == ranx or move_y == rany:
-			print (" sign of collison")
+	
 
 		pygame.display.update()
 		sprites.update()
