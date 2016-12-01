@@ -22,12 +22,22 @@ move_y = display_height/2
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 
+timer = pygame.time.get_ticks()
 
 font = pygame.font.SysFont(None, 30)
 
 def Message_to_user(msg, color):
 	screen_message = font.render(msg, True, color)
 	gameDisplay.blit(screen_message, [200, display_height/2])
+
+def timer_message(msg, color):
+	screen_message = font.render(msg, True, color)
+	gameDisplay.blit(screen_message, [200, display_height - 20])
+
+def score(msg, color):
+    screen_message = font.render(msg, True, color)
+    gameDisplay.blit(screen_message,[0,0])
+
 
 fps = 30
 clock = pygame.time.Clock()
@@ -39,12 +49,8 @@ pygame.display.set_caption('Snake Game')
 ranx = random.randrange(0, display_width - blocksize)
 rany = random.randrange(0, display_height - blocksize)
 
-# class Mouse(pygame.sprite.Sprite):
-# 	def __init__(self):
-# 		Sprite.__init__(self)
-# 		self.image = image.load("mouse.png").convert_alpha()
-# 		self.image = transform.scale(self.image, (50, 50))
-# 		self.rect = self.image.get_rect()
+
+
 
 class Mouse(Sprite):
     def __init__(self, x, y):
@@ -55,33 +61,22 @@ class Mouse(Sprite):
         self.y = rany
         self.rect = self.image.get_rect()
 
-    # move gold to a new random location
     def move(self):
         randX = randint(0, display_width - 15)
         randY = randint(0, display_height - 100)
         self.rect.center = (randX,randY)
-        print ()
+        
 class Snake(Sprite):
 	def __init__ (self):
 		Sprite.__init__(self)
 		self.image = pygame.Surface( [blocksize, blocksize])
 		self.rect = self.image.get_rect()
+	# def Grow(blocksize, snakelist):
+	# 	for coor in snakelist:
+	# 		self.image = pygame.Surface( blue, [coor[0], coor[1]], blocksize, blocksize)
+	# 		self.rect = self.image.get_rect()
 
-	# def move(self):
-	# 	randX = randint(0, 700)
-	# 	randY = randint(0, 700)
-	# 	self.rect.center = (randX,randY)
-
-# class Bomb(pygame.sprite.Sprite):
-# 	def __init__(self):
-# 		Sprite.__init__(self)
-# 		self.image = pygame.draw.rect(gameDisplay, red, 30, 30)
-# 		self.rect = self.image.get_rect()
-# 		self.rect = pygame.rect.Rect(bombx, bomby)
 	
-	
-
-
 
 
 # pygame.display.update()
@@ -93,11 +88,11 @@ my_mouse.move()
 sprites.update()
 sprites.draw(gameDisplay)
 
-# def hit(self, target):
-# 	return self.rect.colliderect(target)
+
 
 move_x = display_width/2
 move_y = display_height/2
+
 
 
 
@@ -108,15 +103,18 @@ def gameLoop():
 	move_x_change = 0
 	move_y_change = 0
 
+	count = 0
+
 	ranx = random.randrange(0, display_width - blocksize)
 	rany = random.randrange(0, display_height - blocksize)
-
+	seconds = (pygame.time.get_ticks() - timer)/1000
 
 	gameExit = False
 	gameOver = False
 	while not gameExit:
 
 		while gameOver == True:
+
 			gameDisplay.fill(black)
 			Message_to_user("Game Over, Press 'p' to play again or 'q' to quit", red)
 			pygame.display.update()
@@ -148,24 +146,39 @@ def gameLoop():
 					move_x_change = 0
 
 
-		if move_x >= display_width or move_x < 0 or move_y >= display_height or move_y < 0:
+		if move_x >= display_width or move_x < 0 or move_y >= display_height or move_y < 0 or seconds > 60:
 			gameOver = True
 
 		if pygame.sprite.collide_rect(my_mouse,my_snake):
 			my_mouse.move()
 			mixer.Sound("lose.wav").play()
+			
+			count += 1
 
+
+		seconds = (pygame.time.get_ticks() - timer)/1000
+		
+
+		if gameOver != True:
+			
+			timer_message("Timer: " + str(seconds), black)
+			pygame.display.update()
+
+
+		
 		move_x += move_x_change
 		move_y += move_y_change
+
 		my_snake.rect.x = move_x
 		my_snake.rect.y = move_y
+
 
 		gameDisplay.fill(green)
 		
 		sprites.draw(gameDisplay)
 		
-	
-
+		score("Score: " + str(count), black)
+		
 		pygame.display.update()
 		sprites.update()
 		sprites.draw(gameDisplay)
@@ -177,20 +190,3 @@ def gameLoop():
 
 gameLoop()
 
-# class Box(pygame.sprite.Sprite)
-# 	def __init__(self, color, x, y, width, height):
-# 		pygame.sprite.Sprite
-# class Shovel(Sprite):
-# 	def __init__(self):
-# 		Sprite.__init__(self)
-# 		self.image = image.load("shovel.gif").convert()
-# 		self.rect = self.image.get_rect()
-
-# class Poop(Gold):
-# 	def __init__(self):
-# 		Sprite.__init__(self)
-# 		self.image = image.load("poop.bmp").convert_alpha()
-# 		self.rect = self.image.get_rect
-# #Using the already defined Gold class witht he exception of new pic and 
-# shovel = Shovel()
-# sprites = RenderPlain
