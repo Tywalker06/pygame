@@ -65,7 +65,29 @@ class Mouse(Sprite):
         randX = randint(0, display_width - 15)
         randY = randint(0, display_height - 100)
         self.rect.center = (randX,randY)
-        
+
+# class Bomb(Sprite):
+#     def __init__(self, x, y):
+#         Sprite.__init__(self)
+#         self.image = image.load("bomb.png").convert_alpha()
+#         self.image = transform.scale(self.image, (50, 50))
+#         self.x = ranx
+#         self.y = rany
+#         self.rect = self.image.get_rect()
+
+#     def move(self):
+#         randX = randint(0, display_width - 15)
+#         randY = randint(0, display_height - 100)
+#         self.rect.center = (randX,randY)
+
+# class Bomb(Sprite):
+#     def __init__(self, x, y):
+#         Sprite.__init__(self)
+#         self.image = image.load("bomb.png").convert_alpha()
+#         self.image = transform.scale(self.image, (50, 50))
+# 		self.rect = self.image.get_rect()
+	
+    
 class Snake(Sprite):
 	def __init__ (self):
 		Sprite.__init__(self)
@@ -82,9 +104,11 @@ class Snake(Sprite):
 # pygame.display.update()
 my_mouse = Mouse(ranx, rany)
 my_snake = Snake()
+# my_bomb = Bomb()
 # # my_bomb = Bomb()
 sprites = RenderPlain(my_mouse,my_snake)
 my_mouse.move()
+# my_bomb.move()
 sprites.update()
 sprites.draw(gameDisplay)
 
