@@ -39,12 +39,12 @@ def score(msg, color):
     gameDisplay.blit(screen_message,[0,0])
 
 
-fps = 30
+fps = 45
 clock = pygame.time.Clock()
 
 blocksize = 10
 
-pygame.display.set_caption('Snake Game')
+pygame.display.set_caption('Mouse Punch')
 
 ranx = random.randrange(0, display_width - blocksize)
 rany = random.randrange(0, display_height - blocksize)
@@ -66,26 +66,15 @@ class Mouse(Sprite):
         randY = randint(0, display_height - 100)
         self.rect.center = (randX,randY)
 
-# class Bomb(Sprite):
-#     def __init__(self, x, y):
-#         Sprite.__init__(self)
-#         self.image = image.load("bomb.png").convert_alpha()
-#         self.image = transform.scale(self.image, (50, 50))
-#         self.x = ranx
-#         self.y = rany
-#         self.rect = self.image.get_rect()
+class Bomb(Mouse):
+    def __init__(self):
+        Sprite.__init__(self)
+        self.image = image.load("bomb.png").convert_alpha()
+        self.image = transform.scale(self.image, (50, 50))
+        self.x = ranx
+        self.y = rany
+        self.rect = self.image.get_rect()
 
-#     def move(self):
-#         randX = randint(0, display_width - 15)
-#         randY = randint(0, display_height - 100)
-#         self.rect.center = (randX,randY)
-
-# class Bomb(Sprite):
-#     def __init__(self, x, y):
-#         Sprite.__init__(self)
-#         self.image = image.load("bomb.png").convert_alpha()
-#         self.image = transform.scale(self.image, (50, 50))
-# 		self.rect = self.image.get_rect()
 	
     
 class Snake(Sprite):
@@ -93,22 +82,17 @@ class Snake(Sprite):
 		Sprite.__init__(self)
 		self.image = pygame.Surface( [blocksize, blocksize])
 		self.rect = self.image.get_rect()
-	# def Grow(blocksize, snakelist):
-	# 	for coor in snakelist:
-	# 		self.image = pygame.Surface( blue, [coor[0], coor[1]], blocksize, blocksize)
-	# 		self.rect = self.image.get_rect()
-
 	
 
 
-# pygame.display.update()
+
 my_mouse = Mouse(ranx, rany)
 my_snake = Snake()
-# my_bomb = Bomb()
-# # my_bomb = Bomb()
-sprites = RenderPlain(my_mouse,my_snake)
+my_bomb = Bomb()
+
+sprites = RenderPlain(my_mouse,my_snake,my_bomb)
 my_mouse.move()
-# my_bomb.move()
+my_bomb.move()
 sprites.update()
 sprites.draw(gameDisplay)
 
@@ -175,9 +159,15 @@ def gameLoop():
 
 		if pygame.sprite.collide_rect(my_mouse,my_snake):
 			my_mouse.move()
+			my_bomb.move()
+			
 			mixer.Sound("lose.wav").play()
 			
 			count += 1
+
+		if pygame.sprite.collide_rect(my_snake, my_bomb):
+			my_bomb.move()
+			gameOver = True
 
 
 		seconds = (pygame.time.get_ticks() - timer)/1000
